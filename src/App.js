@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  const [location, setLocation] = useState({});
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(position => {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
+       fetch(url)
+       .then((response) => response.json())
+       .then((data) => {
+         const address = data.display_name;
+         console.log(address);
+         setLocation(address)
+       });
+    });
+
+    
+
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>Current address: {location}</p>
     </div>
   );
 }
